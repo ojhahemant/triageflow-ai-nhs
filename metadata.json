@@ -1,0 +1,8 @@
+{
+  "name": "TriageFlow AI",
+  "description": "A safety-first, persona-based augmentation layer for NHS-ready referral triage and orchestration, featuring AI decision support and real-time task management.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
