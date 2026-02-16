@@ -15,10 +15,14 @@ const ManagementDashboard: React.FC<ManagementDashboardProps> = ({ patients }) =
     const pendingTriage = patients.filter(p => p.status === 'Triage Pending').length;
     const pendingSchedule = patients.filter(p => p.status === 'Awaiting Scheduling').length;
     const confirmed = patients.filter(p => p.status === 'Confirmed').length;
-    
+
     const urgentCount = patients.filter(p => p.urgency === 'Urgent').length;
-    
-    return { total, pendingIntake, pendingTriage, pendingSchedule, confirmed, urgentCount };
+
+    // Department breakdown
+    const dermatology = patients.filter(p => p.department === 'Dermatology').length;
+    const plasticSurgery = patients.filter(p => p.department === 'Plastic Surgery').length;
+
+    return { total, pendingIntake, pendingTriage, pendingSchedule, confirmed, urgentCount, dermatology, plasticSurgery };
   }, [patients]);
 
   const backlogData = [
@@ -49,16 +53,17 @@ const ManagementDashboard: React.FC<ManagementDashboardProps> = ({ patients }) =
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         {[
-          { label: 'Live Backlog', value: metrics.total, sub: 'Total Referrals' },
-          { label: 'Triage Queue', value: metrics.pendingTriage, sub: 'Waiting for Clinician' },
-          { label: 'Booking Rate', value: `${Math.round((metrics.confirmed / metrics.total) * 100)}%`, sub: 'Intake to Confirmation' },
-          { label: 'Urgent Cases', value: metrics.urgentCount, sub: 'Requires <24h Action' }
+          { label: 'Live Backlog', value: metrics.total, sub: 'Total Referrals', color: 'text-slate-900' },
+          { label: 'Dermatology', value: metrics.dermatology, sub: `${Math.round((metrics.dermatology / metrics.total) * 100)}% of total`, color: 'text-green-600' },
+          { label: 'Plastic Surgery', value: metrics.plasticSurgery, sub: `${Math.round((metrics.plasticSurgery / metrics.total) * 100)}% of total`, color: 'text-purple-600' },
+          { label: 'Triage Queue', value: metrics.pendingTriage, sub: 'Waiting for Clinician', color: 'text-amber-600' },
+          { label: 'Urgent Cases', value: metrics.urgentCount, sub: 'Requires <24h Action', color: 'text-red-600' }
         ].map((stat, i) => (
           <div key={i} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{stat.label}</p>
-            <p className="text-3xl font-black text-slate-900">{stat.value}</p>
+            <p className={`text-3xl font-black ${stat.color}`}>{stat.value}</p>
             <p className="text-xs text-slate-500 mt-1">{stat.sub}</p>
           </div>
         ))}

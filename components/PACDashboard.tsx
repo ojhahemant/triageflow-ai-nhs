@@ -10,12 +10,20 @@ interface PACDashboardProps {
 const PACDashboard: React.FC<PACDashboardProps> = ({ patients, onUpdatePatient }) => {
   const [selectedClinic, setSelectedClinic] = useState<string>('all');
 
-  // Clinic availability data
+  // Clinic availability data - organized by department
   const clinics = [
-    { id: 'urgent-clinic', name: 'Urgent Care Clinic', slots: 12, booked: 8, urgencyMatch: ['Urgent', '2WW'] },
-    { id: 'routine-clinic', name: 'Routine Outpatient Clinic', slots: 20, booked: 15, urgencyMatch: ['Routine', 'Inter Regular'] },
-    { id: 'specialist-clinic', name: 'Specialist Dermatology', slots: 8, booked: 6, urgencyMatch: ['Urgent', 'Routine', '2WW'] },
-    { id: 'minor-ops', name: 'Minor Operations Suite', slots: 10, booked: 9, urgencyMatch: ['Routine'] }
+    // Dermatology Clinics
+    { id: 'derm-urgent', name: 'Dermatology Urgent Clinic', department: 'Dermatology', slots: 12, booked: 8, urgencyMatch: ['Urgent', '2WW'] },
+    { id: 'derm-routine', name: 'Dermatology Routine Clinic', department: 'Dermatology', slots: 20, booked: 15, urgencyMatch: ['Routine', 'Inter Regular'] },
+    { id: 'derm-minor', name: 'Dermatology Minor Ops', department: 'Dermatology', slots: 10, booked: 7, urgencyMatch: ['Routine'] },
+    { id: 'derm-2ww', name: '2WW Dermatology Cancer', department: 'Dermatology', slots: 6, booked: 4, urgencyMatch: ['2WW'] },
+
+    // Plastic Surgery Clinics
+    { id: 'plastics-trauma', name: 'Plastic Surgery Trauma', department: 'Plastic Surgery', slots: 8, booked: 5, urgencyMatch: ['Urgent'] },
+    { id: 'plastics-hand', name: 'Plastic Surgery Hand Clinic', department: 'Plastic Surgery', slots: 15, booked: 10, urgencyMatch: ['Routine', 'Inter Regular'] },
+    { id: 'plastics-reconstruction', name: 'Plastic Surgery Reconstruction', department: 'Plastic Surgery', slots: 10, booked: 8, urgencyMatch: ['Routine', 'Inter Regular'] },
+    { id: 'plastics-burns', name: 'Plastic Surgery Burns Unit', department: 'Plastic Surgery', slots: 6, booked: 3, urgencyMatch: ['Urgent', '2WW'] },
+    { id: 'plastics-2ww', name: '2WW Plastic Surgery Cancer', department: 'Plastic Surgery', slots: 5, booked: 3, urgencyMatch: ['2WW'] },
   ];
 
   const handleBookAppointment = (patient: Patient, clinicName: string) => {
@@ -30,10 +38,12 @@ const PACDashboard: React.FC<PACDashboardProps> = ({ patients, onUpdatePatient }
     p.status === 'Intake Review' || p.status === 'Awaiting Scheduling'
   );
 
-  // Get suitable clinics for a patient based on urgency
-  const getSuitableClinics = (urgency: string) => {
+  // Get suitable clinics for a patient based on urgency and department
+  const getSuitableClinics = (urgency: string, department: string) => {
     return clinics.filter(clinic =>
-      clinic.urgencyMatch.includes(urgency) && (clinic.slots - clinic.booked) > 0
+      clinic.department === department &&
+      clinic.urgencyMatch.includes(urgency) &&
+      (clinic.slots - clinic.booked) > 0
     );
   };
 
@@ -49,17 +59,58 @@ const PACDashboard: React.FC<PACDashboardProps> = ({ patients, onUpdatePatient }
         </div>
       </div>
 
+      {/* Department Tabs */}
+      <div className="flex space-x-2 mb-4">
+        <button
+          onClick={() => setSelectedClinic('all')}
+          className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ${
+            selectedClinic === 'all'
+              ? 'bg-blue-600 text-white shadow-md'
+              : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+          }`}
+        >
+          All Departments
+        </button>
+        <button
+          onClick={() => setSelectedClinic('dermatology')}
+          className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ${
+            selectedClinic === 'dermatology'
+              ? 'bg-green-600 text-white shadow-md'
+              : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+          }`}
+        >
+          Dermatology
+        </button>
+        <button
+          onClick={() => setSelectedClinic('plastic-surgery')}
+          className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ${
+            selectedClinic === 'plastic-surgery'
+              ? 'bg-purple-600 text-white shadow-md'
+              : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+          }`}
+        >
+          Plastic Surgery
+        </button>
+      </div>
+
       {/* Clinic Availability Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {clinics.map((clinic) => {
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {clinics
+          .filter(clinic =>
+            selectedClinic === 'all' ||
+            (selectedClinic === 'dermatology' && clinic.department === 'Dermatology') ||
+            (selectedClinic === 'plastic-surgery' && clinic.department === 'Plastic Surgery')
+          )
+          .map((clinic) => {
           const available = clinic.slots - clinic.booked;
           const percentage = (clinic.booked / clinic.slots) * 100;
+          const deptColor = clinic.department === 'Dermatology' ? 'text-green-600' : 'text-purple-600';
 
           return (
             <div key={clinic.id} className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1">
-                  <h3 className="font-semibold text-slate-900 text-sm mb-1">{clinic.name}</h3>
+                  <h3 className={`font-semibold text-sm mb-1 ${deptColor}`}>{clinic.name}</h3>
                   <p className="text-[10px] text-slate-400 uppercase font-bold">
                     {clinic.urgencyMatch.join(', ')}
                   </p>
@@ -118,9 +169,18 @@ const PACDashboard: React.FC<PACDashboardProps> = ({ patients, onUpdatePatient }
           </div>
         ) : (
           <div className="divide-y divide-slate-100">
-            {bookablePatients.map(patient => {
-              const suitableClinics = getSuitableClinics(patient.urgency);
+            {bookablePatients
+              .filter(p =>
+                selectedClinic === 'all' ||
+                (selectedClinic === 'dermatology' && p.department === 'Dermatology') ||
+                (selectedClinic === 'plastic-surgery' && p.department === 'Plastic Surgery') ||
+                (selectedClinic === 'urgent' && (p.urgency === 'Urgent' || p.urgency === '2WW')) ||
+                (selectedClinic === 'routine' && (p.urgency === 'Routine' || p.urgency === 'Inter Regular'))
+              )
+              .map(patient => {
+              const suitableClinics = getSuitableClinics(patient.urgency, patient.department);
               const isUrgent = patient.urgency === 'Urgent' || patient.urgency === '2WW';
+              const deptColor = patient.department === 'Dermatology' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700';
 
               return (
                 <div key={patient.id} className={`p-5 transition-all ${isUrgent ? 'bg-red-50/30' : 'hover:bg-slate-50'}`}>
@@ -139,7 +199,10 @@ const PACDashboard: React.FC<PACDashboardProps> = ({ patients, onUpdatePatient }
                       </div>
 
                       <div className="ml-13 space-y-2">
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-2 flex-wrap gap-2">
+                          <span className={`inline-flex px-2 py-1 text-[10px] font-bold rounded-full uppercase ${deptColor}`}>
+                            {patient.department}
+                          </span>
                           <span className={`inline-flex px-2 py-1 text-[10px] font-bold rounded-full uppercase ${
                             patient.urgency === 'Urgent' || patient.urgency === '2WW'
                               ? 'bg-red-100 text-red-700'
@@ -149,9 +212,16 @@ const PACDashboard: React.FC<PACDashboardProps> = ({ patients, onUpdatePatient }
                           }`}>
                             {patient.urgency}
                           </span>
-                          <span className="text-xs text-slate-600">
-                            {patient.procedure || 'Awaiting procedure assignment'}
-                          </span>
+                          {patient.waitingDays !== undefined && (
+                            <span className={`inline-flex px-2 py-1 text-[10px] font-bold rounded-full uppercase ${
+                              patient.waitingDays > 7 ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-600'
+                            }`}>
+                              {patient.waitingDays}d wait
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-xs text-slate-600">
+                          {patient.procedure || 'Awaiting procedure assignment'}
                         </div>
 
                         <p className="text-sm text-slate-600 italic">"{patient.gpNote.substring(0, 100)}..."</p>

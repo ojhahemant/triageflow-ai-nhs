@@ -6,13 +6,15 @@ export enum Persona {
   MANAGEMENT = 'MANAGEMENT'
 }
 
-export type PatientStatus = 
-  | 'Intake Review' 
-  | 'Triage Pending' 
-  | 'Form Pending' 
-  | 'Awaiting Scheduling' 
-  | 'Scheduled' 
-  | 'Confirmed' 
+export type Department = 'Dermatology' | 'Plastic Surgery';
+
+export type PatientStatus =
+  | 'Intake Review'
+  | 'Triage Pending'
+  | 'Form Pending'
+  | 'Awaiting Scheduling'
+  | 'Scheduled'
+  | 'Confirmed'
   | 'Rejected';
 
 export interface Patient {
@@ -21,6 +23,7 @@ export interface Patient {
   dob: string;
   mrn: string;
   referralDate: string;
+  department: Department;
   urgency: 'Urgent' | 'Routine' | 'Inter Regular' | '2WW' | 'Not Set';
   status: PatientStatus;
   gpNote: string;
@@ -30,6 +33,8 @@ export interface Patient {
   aiSummary?: string;
   aiRecommendation?: string;
   lastUpdated?: string;
+  waitingDays?: number;
+  clinicType?: string;
 }
 
 export interface Task {

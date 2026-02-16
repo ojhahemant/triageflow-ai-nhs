@@ -16,6 +16,10 @@ const ClinicianDashboard: React.FC<ClinicianDashboardProps> = ({ patient, onUpda
     setResults(null);
   }, [patient.id]);
 
+  const getDepartmentColor = (dept: string) => {
+    return dept === 'Dermatology' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700';
+  };
+
   const handleAIRun = async () => {
     setAnalyzing(true);
     const data = await analyzeReferral(patient);
@@ -51,12 +55,24 @@ const ClinicianDashboard: React.FC<ClinicianDashboardProps> = ({ patient, onUpda
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
             <div className="flex justify-between items-start mb-4">
-              <h2 className="text-lg font-semibold text-slate-800">Patient Profile</h2>
-              <span className={`px-2 py-1 rounded text-xs font-bold uppercase ${
-                patient.urgency === 'Urgent' ? 'bg-red-100 text-red-600' : 'bg-slate-100 text-slate-500'
-              }`}>
-                GP Suggested: {patient.urgency}
-              </span>
+              <div>
+                <h2 className="text-lg font-semibold text-slate-800">Patient Profile</h2>
+                <span className={`inline-block mt-1 px-2 py-1 rounded text-xs font-bold uppercase ${getDepartmentColor(patient.department)}`}>
+                  {patient.department}
+                </span>
+              </div>
+              <div className="flex flex-col items-end gap-2">
+                <span className={`px-2 py-1 rounded text-xs font-bold uppercase ${
+                  patient.urgency === 'Urgent' || patient.urgency === '2WW' ? 'bg-red-100 text-red-600' : 'bg-slate-100 text-slate-500'
+                }`}>
+                  GP Suggested: {patient.urgency}
+                </span>
+                {patient.waitingDays !== undefined && patient.waitingDays > 7 && (
+                  <span className="px-2 py-1 rounded text-xs font-bold uppercase bg-amber-100 text-amber-700">
+                    Waiting: {patient.waitingDays} days
+                  </span>
+                )}
+              </div>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
               <div className="bg-slate-50 p-3 rounded-lg">
