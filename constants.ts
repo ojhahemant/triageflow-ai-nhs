@@ -94,11 +94,11 @@ export const PERSONA_CONFIG = {
     icon: 'ClipboardList',
     description: 'Digital management of theatre lists and scheduling operations.'
   },
-  [Persona.ADMIN]: {
-    title: 'Referral Admin',
-    subtitle: 'The Gatekeeper',
-    icon: 'Inbox',
-    description: 'Manages intake pool, validates GP referrals, and prepares them for triage.'
+  [Persona.PAC]: {
+    title: 'Patients Appointments Centre',
+    subtitle: 'The Booking Hub',
+    icon: 'Calendar',
+    description: 'Book patients into clinics according to urgency and availability.'
   },
   [Persona.MANAGEMENT]: {
     title: 'Management',

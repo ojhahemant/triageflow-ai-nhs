@@ -2,7 +2,7 @@
 export enum Persona {
   CLINICIAN = 'CLINICIAN',
   WAITING_LIST = 'WAITING_LIST',
-  ADMIN = 'ADMIN',
+  PAC = 'PAC',
   MANAGEMENT = 'MANAGEMENT'
 }
 
