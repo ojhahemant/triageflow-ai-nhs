@@ -5,16 +5,28 @@ import { PERSONA_CONFIG } from '../constants';
 
 interface NavbarProps {
   currentPersona: Persona;
+  onMenuClick?: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ currentPersona }) => {
+const Navbar: React.FC<NavbarProps> = ({ currentPersona, onMenuClick }) => {
   const config = PERSONA_CONFIG[currentPersona];
 
   return (
-    <header className="bg-white border-b border-slate-200 h-16 flex items-center justify-between px-6 shrink-0">
-      <div className="flex items-center space-x-4">
-        <h1 className="text-lg font-semibold text-slate-800">
-          {config.title} - <span className="text-slate-500 font-normal">Dashboard</span>
+    <header className="bg-white border-b border-slate-200 h-16 flex items-center justify-between px-3 md:px-6 shrink-0">
+      <div className="flex items-center space-x-2 md:space-x-4">
+        {/* Mobile Menu Button */}
+        <button
+          onClick={onMenuClick}
+          className="lg:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
+        <h1 className="text-sm md:text-lg font-semibold text-slate-800">
+          <span className="hidden sm:inline">{config.title} - </span>
+          <span className="text-slate-500 font-normal">Dashboard</span>
         </h1>
       </div>
       
