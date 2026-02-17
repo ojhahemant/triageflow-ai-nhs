@@ -11,6 +11,10 @@ import { MetricCardWidget } from './MetricCardWidget';
 import { TableWidget } from './TableWidget';
 import { PatientListWidget } from './PatientListWidget';
 import { AlertCardWidget } from './AlertCardWidget';
+import ClinicianDashboard from '../ClinicianDashboard';
+import PACDashboard from '../PACDashboard';
+import WaitingListDashboard from '../WaitingListDashboard';
+import ManagementDashboard from '../ManagementDashboard';
 
 interface WidgetRendererProps {
   config: WidgetConfig;
@@ -60,6 +64,19 @@ export const WidgetRenderer: React.FC<WidgetRendererProps> = ({ config, context 
           {/* Patient card content */}
         </div>
       );
+
+    case 'full-dashboard-clinician':
+      if (!context.selectedPatient) return null;
+      return <ClinicianDashboard patient={context.selectedPatient} onUpdatePatient={context.onUpdatePatient || (() => {})} />;
+
+    case 'full-dashboard-pac':
+      return <PACDashboard patients={context.patients} onUpdatePatient={context.onUpdatePatient || (() => {})} />;
+
+    case 'full-dashboard-waiting-list':
+      return <WaitingListDashboard patients={context.patients} onUpdatePatient={context.onUpdatePatient || (() => {})} />;
+
+    case 'full-dashboard-management':
+      return <ManagementDashboard patients={context.patients} />;
 
     case 'custom':
       // For custom widgets, return placeholder or dynamic import

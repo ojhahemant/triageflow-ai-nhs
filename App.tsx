@@ -8,6 +8,8 @@ import PersonaSelector from './components/PersonaSelector';
 import { ConfigurableDashboard } from './components/ConfigurableDashboard';
 import { getPersonaConfig } from './config/personas';
 
+console.log('🚀 TriageFlow AI - Elaborate Dashboards Loaded - Build: ' + new Date().toISOString());
+
 const App: React.FC = () => {
   const [currentPersona, setCurrentPersona] = useState<Persona | null>(null);
   const [selectedPatientId, setSelectedPatientId] = useState<string>(MOCK_PATIENTS[0].id);
