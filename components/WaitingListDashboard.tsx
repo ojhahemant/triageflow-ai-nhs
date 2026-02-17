@@ -387,6 +387,7 @@ const WaitingListDashboard: React.FC<WaitingListDashboardProps> = ({ patients, o
               </tbody>
             </table>
           </div>
+          )}
 
           {/* Confirmed / Recent Bookings */}
           <div className="mt-8">
@@ -405,7 +406,6 @@ const WaitingListDashboard: React.FC<WaitingListDashboardProps> = ({ patients, o
                 {patients.filter(p => p.status === 'Confirmed').length === 0 && <p className="text-xs text-slate-400 italic">No bookings confirmed yet.</p>}
              </div>
           </div>
-          )}
         </div>
 
         <div className="space-y-6">
