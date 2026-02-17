@@ -57,7 +57,7 @@ const PersonaSelector: React.FC<PersonaSelectorProps> = ({ onSelect }) => {
 
           {/* Other Applications */}
           <div className="border-t border-slate-700 pt-8">
-            <p className="text-slate-400 text-xs uppercase tracking-wider mb-4 font-semibold">Explore Our Other Solutions</p>
+            <p className="text-slate-400 text-xs uppercase tracking-wider mb-4 font-semibold">Other Links</p>
             <div className="flex items-center justify-center gap-6">
               <a
                 href="https://kanai.co/"
